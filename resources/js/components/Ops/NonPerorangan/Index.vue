@@ -1,0 +1,418 @@
+<template>
+    <div> 
+
+<div class="breadcrumb"> 
+  <div class="panel">
+    <h1 class="animated fadeInLeft" align="center">Profil Non Perorangan</h1>                
+  </div>
+</div>
+
+
+<div class="row mb-4">
+    <div class="col-md-12 mb-4">
+        <div class="card text-left">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div id="zero_configuration_table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                        <div class="row"> 
+                            <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length" id="zero_configuration_table_length">
+                                    <div class="row row-xs"> 
+                                        <div class="col-md-12">
+                                            <br>
+                                            <label>Search for : </label>
+                                            <input type="text" v-model="filterText" class="form-control form-control-sm" @keyup.enter="doFilter" placeholder="Nama Perusahaan / Nomor Akun"> 
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br> 
+                                            <button class="btn btn-raised btn-raised-success m-1" @click.prevent="doFilter">Search <i class="fa fa-thumbs-o-up position-right"></i></button>
+                                            <button class="btn btn-raised btn-raised-warning m-1" @click.prevent="resetFilter">Reset Form <i class="fa fa-refresh position-right"></i></button> 
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
+                            <div class="col-sm-12 col-md-6">
+                                <div id="zero_configuration_table_filter" class="dataTables_filter">
+                                    <label>Per Page: 
+                                    <select v-model="perPage" aria-controls="zero_configuration_table" class="form-control form-control-sm">
+                                        <option :value=10>10</option>
+                                        <option :value=25>25</option>
+                                        <option :value=50>50</option>
+                                        <option :value=75>75</option>
+                                        <option :value=100>100</option>
+                                    </select>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+ 
+                    <br>
+
+                    <vuetable ref="vuetable"
+                        api-url="/non-perorangan"
+                        :fields="fields"
+                        pagination-path=""
+                        :per-page="perPage"
+                        :css="css.table"
+                        :append-params="moreParams" 
+                        @vuetable:pagination-data="onPaginationData"
+                        @vuetable:loading="onLoading"        
+                        @vuetable:load-error="onLoadingError"        
+                        @vuetable:load-success="onLoaded"
+                    ></vuetable> 
+                    <div class="vuetable-pagination">
+                    <vuetable-pagination-info ref="paginationInfo"
+                        info-class="pagination-info"
+                    ></vuetable-pagination-info>
+                    <vuetable-pagination ref="pagination"
+                        :css="css.pagination"
+                        @vuetable-pagination:change-page="onChangePage"
+                    ></vuetable-pagination>
+                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</template>
+
+<script>
+     
+import Vue from 'vue'
+import accounting from 'accounting'
+import moment from 'moment'
+import Datepicker from 'vuejs-datepicker' 
+import VueEvents from 'vue-events'
+import Hashids from 'hashids'
+import {Vuetable, VuetablePagination, VuetablePaginationInfo} from 'vuetable-2'
+
+import VueSweetalert2 from 'vue-sweetalert2'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+
+import ViewEditActions from '../../Buttons/ViewEditActions.vue' 
+Vue.component('view-edit-actions', ViewEditActions)
+ 
+
+Vue.use(VueSweetalert2)
+Vue.use(Loading)
+Vue.use(VueEvents)
+
+
+export default {
+  components: {   
+    Vuetable, 
+    VuetablePagination,
+    VuetablePaginationInfo,
+    Datepicker,  
+  },
+  data () {
+    return {  
+        errors: [], 
+        token: localStorage.getItem('token'), 
+
+	    isLoading: false,
+        perPage: 10,
+        startTime: {
+            time: ''
+        },
+        endtime: {
+            time: ''
+        },
+        option: {
+            type: 'day',
+            week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+            month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            format: 'YYYY-MM-DD',
+            placeholder: 'YYYY-MM-DD',
+            inputStyle: {
+            'display': 'inline-block',
+            'padding': '6px',
+            'line-height': '22px',
+            'font-size': '16px',
+            'border': '2px solid #fff',
+            'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+            'border-radius': '2px',
+            'color': '#5F5F5F'
+            },
+            color: {
+            header: '#B799DA',
+            headerText: '#f00'
+            },
+            buttons: {
+            ok: 'Ok',
+            cancel: 'Cancel'
+            },
+            overlayOpacity: 0.5, // 0.5 as default 
+            dismissible: true // as true as default 
+        },
+        position: 'up right',
+        closeBtn: true,
+        submitSelectedItems:[],
+        fields: [ 
+            {
+            name: '__sequence',
+            title: 'No',
+            titleClass: 'text-center',
+            dataClass: 'text-center'
+            }, 
+            {
+                name: 'nama_perusahaan',
+                title: 'Nama Perusahaan',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
+            }, 
+            {
+                name: 'nomor_akun',
+                title: 'Nomor Akun',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
+            },  
+            {
+                name: '__component:view-edit-actions',
+                title: 'Actions',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
+            }
+        ],
+        filterText: '',
+        css: {
+            table: {
+                tableClass: 'table table-bordered table-striped table-hover',
+                ascendingIcon: 'glyphicon glyphicon-chevron-up',
+                descendingIcon: 'glyphicon glyphicon-chevron-down'
+            },
+            pagination: {
+                wrapperClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                pageClass: 'page',
+                linkClass: 'link',
+                icons: {
+                    first: '',
+                    prev: '',
+                    next: '',
+                    last: '',
+                },
+            },
+            icons: {
+                first: 'glyphicon glyphicon-step-backward',
+                prev: 'glyphicon glyphicon-chevron-left',
+                next: 'glyphicon glyphicon-chevron-right',
+                last: 'glyphicon glyphicon-step-forward',
+            },
+        },
+        moreParams: {}
+    }
+  },
+        watch: { 
+            'perPage'(newValue, oldValue) {
+               this.$events.fire('filter-set', this.filterText)
+            }, 
+        },
+        methods: {
+            doFilter () {
+                this.$events.fire('filter-set', this.filterText )
+            },
+            diacak(id){
+                var hashids = new Hashids('',1000,'abcdefghijklmnopqrstuvwxyz0987654321ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // no padding
+                return hashids.encode(id); 
+           },
+           
+            resultError(data) {  
+                 var count = Object.keys(data).length;
+                for(var x=0; x < count;x++){ 
+                    var nameOb      = Object.keys(data)[x];
+                    var objectData  = data[nameOb];
+                    for(var y=0; y < objectData.length;y++){ 
+                        this.error(objectData[y]);
+                       // console.log(objectData[y]);
+                    }
+                }
+            },
+            
+            editItem(item ,index = this.indexOf(item)){
+                this.$router.push({name:'OpsNonPeroranganEdit', params: {id: this.diacak(item.id),typenya:'edit-non-perorangan',rowDatanya:item }});
+            },  
+            viewItem(item ,index = this.indexOf(item)){
+                this.$router.push({name:'OpsNonPeroranganDetail', params: {id: this.diacak(item.id),typenya:'detail-non-perorangan',rowDatanya:item }});
+            } ,
+            formatDate (value, fmt = 'DD-MM-YYYY HH:mm:ss') {
+                return (value == null)
+                    ? ''
+                    : moment(value, 'YYYY-MM-DD HH:mm:ss').format(fmt)
+            },
+            onChangePage (page) {
+                 this.$refs.vuetable.changePage(page)
+            },
+            onPaginationData (paginationData) {
+                this.$refs.pagination.setPaginationData(paginationData)
+                this.$refs.paginationInfo.setPaginationData(paginationData)
+            },
+            onLoading() {
+                this.loading();
+                this.isLoading = true;
+            },
+            onLoaded() {
+            this.isLoading = false;
+            },
+            onLoadingError() {
+               this.isLoading = true;
+               axios.get('non-perorangan').then((response) => {
+                   if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                        this.isLoading = false;
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.isLoading = false;
+                        }
+                    }
+                });
+            },	
+
+            customFormatter(date) {
+                return moment(date).format('YYYY-MM-DD');
+            },
+
+            resetFilter () {
+                this.filterText = ''
+                this.$events.fire('filter-reset')
+            },
+
+            fetchIt(){
+                this.loading();
+                axios.get('/user/get-ops').then((response) => {
+                    if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                        if(response.data.status != 200){ 
+                            window.location.href = window.webURL; 
+                        }
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 422) {
+                            this.$router.push('/server-error');
+                        }else if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.$router.push('/page-not-found');
+                        }
+                    }
+                });
+            },
+
+            success(kata) {
+                this.$swal({
+                    position: 'top-end',
+                    type: 'success',
+                    title: kata,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
+            question(kata) {
+                this.$swal('Ooppss?',kata,'question');
+            },
+            error(kata) {
+                this.$swal({
+                    position: 'top-end',
+                    type: 'error',
+                    title: kata,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
+            loading(){ 
+                let loader = this.$loading.show({
+                  // Optional parameters
+                  container: this.fullPage ? null : this.$refs.formContainer,
+                  loader:'dots',
+                  color:'#2196F3',
+                  canCancel: true, 
+                  onCancel: this.onCancelLoading,
+                }); 
+                setTimeout(() => {
+                  loader.hide()
+                },1000);
+            },
+            onCancelLoading() {
+               console.log('User cancelled the loader.'); 
+            }  	
+
+        },
+        events: { 
+            'filter-set' (filterText,startTime,endtime) {
+                this.moreParams = {
+                filter: filterText,min: startTime, max: endtime
+                }
+                Vue.nextTick(() => this.$refs.vuetable.refresh() )
+            },
+            'filter-reset' () {
+                this.moreParams = {}
+                Vue.nextTick(() => this.$refs.vuetable.refresh() )
+            } 
+        },
+        created: function() { 
+            let self = this;
+            this.$root.$on('viewitem', function(data,index){
+                //console.log(data);
+               self.viewItem(data,index);
+            });
+            this.$root.$on('edititem', function(data,index){
+               self.editItem(data,index);
+            }); 
+        },
+		mounted() { 
+            this.fetchIt(); 
+        }
+
+}
+</script>
+<style>
+.pagination {
+  margin: 0;
+  float: right;
+}
+.pagination a.page {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+}
+.pagination a.page.active {
+  color: white;
+  background-color: #337ab7;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+}
+.pagination a.btn-nav {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+}
+.pagination a.btn-nav.disabled {
+  color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+  cursor: not-allowed;
+}
+.pagination-info {
+  float: left;
+}
+</style>

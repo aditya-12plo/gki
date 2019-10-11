@@ -1,0 +1,16 @@
+UKK
+search by period by file
+show table data
+
+table karyawan add upload file datetime
+
+data perorangan / non perorangan add new roles (approval)
+
+
+php artisan queue:listen --timeout=0
+
+background process in linux
+https://stackoverflow.com/questions/28702780/setting-up-supervisord-on-a-aws-ami-linux-server
+
+background process in windows
+https://stackoverflow.com/questions/37729662/laravel-running-queuelisten-continuously-on-windows-azure-web-app
