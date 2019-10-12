@@ -44,12 +44,25 @@ Route::resource('/non-perorangan', 'NonPeroranganController');
 
 
 Route::get('/hrd-karyawan', 'KaryawanController@index');
+Route::get('/print-karyawan', 'KaryawanController@print');
+Route::post('/download-excel-karyawan', 'KaryawanController@downloadFile');
+Route::get('/hrd-karyawan/by-jabatan', 'KaryawanController@chartByJabatan');
+Route::get('/hrd-karyawan/by-divisi', 'KaryawanController@chartByDivisi');
 Route::post('/hrd-karyawan', 'KaryawanController@store');
 Route::delete('/hrd-karyawan/{id}', 'KaryawanController@destroy');
 Route::post('/hrd-karyawan-update/{id}', 'KaryawanController@updateKaryawan');
 Route::post('/hrd-download-import-themplate', 'KaryawanController@downloadThemplate');
 Route::post('/hrd-import-data-karyawan', 'KaryawanController@importData');
-
+Route::resource('/jabatan', 'JabatanController');
+Route::get('/jabatan-dropdown', 'JabatanController@dropDown');
+Route::delete('/jabatan/delete-all/{id}', 'JabatanController@deleteAll');
+Route::get('/print-jabatan', 'JabatanController@print');
+Route::post('/download-excel-jabatan', 'JabatanController@downloadFile');
+Route::resource('/divisi', 'DivisiController');
+Route::get('/divisi-dropdown', 'DivisiController@dropDown');
+Route::delete('/divisi/delete-all/{id}', 'DivisiController@deleteAll');
+Route::get('/print-divisi', 'DivisiController@print');
+Route::post('/download-excel-divisi', 'DivisiController@downloadFile');
  
 Route::resource('/ukk-peps', 'PepsController');
 Route::post('/ukk-peps-update/{id}', 'PepsController@updatePeps');

@@ -48,6 +48,7 @@ class KaryawanImport implements ToModel, WithValidation, WithHeadingRow, WithEve
             'nama'              => $row['nama'],
             'nomor_aplikasi'    => $row['nomor_aplikasi'],
             'jabatan'           => $row['jabatan'],
+            'divisi'            => $row['divisi'],
             'awal_masuk'        => $this->transformDate($row['awal_masuk']),
             'cuti'              => $row['cuti'],
         ]);
@@ -82,10 +83,12 @@ class KaryawanImport implements ToModel, WithValidation, WithHeadingRow, WithEve
             '*.nomor_aplikasi'  => 'required|digits_between:1,255',
             'jabatan'           => 'required|max:255', 
             '*.jabatan'         => 'required|max:255', 
+            'divisi'            => 'required|max:255', 
+            '*.divisi'          => 'required|max:255', 
             'awal_masuk'        => 'required|date_format:Y-m-d',
             '*.awal_masuk'      => 'required|date_format:Y-m-d',
-            'cuti'              => 'required|digits_between:1,3',
-            '*.cuti'            => 'required|digits_between:1,3',
+            'cuti'              => 'required|digits_between:1,2',
+            '*.cuti'            => 'required|digits_between:1,2',
         ];
     }
 

@@ -9,7 +9,7 @@ class Karyawan extends Model
 
     protected $table = 'karyawan';
     protected $primaryKey = 'id';
-    protected $fillable = array('nama','nomor_aplikasi','jabatan','awal_masuk','cuti','dokumen');
+    protected $fillable = array('nama','nomor_aplikasi','jabatan','divisi','awal_masuk','cuti','dokumen');
     public $timestamps = true; 
   
 }

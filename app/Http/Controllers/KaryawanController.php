@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Response,View,Input,Auth,Session,Validator,File,Hash,DB,Mail,Excel;
 use Illuminate\Support\Facades\Crypt;
+use PHPExcel; 
+use PHPExcel_IOFactory;
 
 use Maatwebsite\Excel\HeadingRowImport;
 
@@ -54,6 +56,7 @@ class KaryawanController extends Controller
             'nama'              => 'required|max:255', 
             'nomor_aplikasi'    => 'required|digits_between:1,255',
             'jabatan'           => 'required|max:255', 
+            'divisi'            => 'required|max:255', 
             'awal_masuk'        => 'required|date_format:Y-m-d',
             'cuti'              => 'required|digits_between:1,3',
             'dokumen'           => 'required|mimes:pdf'
@@ -71,7 +74,7 @@ class KaryawanController extends Controller
         if(!$upload_success){
             return response()->json(['status'=>422,'data'=>'','message'=>['file_name'=>['File upload fail']]]); 
         }else{
-            $masuk = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'cuti' =>$request->cuti, 'dokumen' =>$fileName); 
+            $masuk = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'divisi' =>$request->divisi , 'cuti' =>$request->cuti, 'dokumen' =>$fileName); 
             LogActivity::create(['name' => Auth::user()->name, 'email' => Auth::user()->email, 'table'=>'karyawan' ,'action' => 'insert', 'data' => json_encode($masuk)]);
             Karyawan::create($masuk);
             return response()->json(['status'=>200,'data'=>'','message'=>'Add Successfully']);
@@ -109,6 +112,7 @@ class KaryawanController extends Controller
                     'nama'              => 'required|max:255', 
                     'nomor_aplikasi'    => 'required|digits_between:1,255',
                     'jabatan'           => 'required|max:255', 
+                    'divisi'            => 'required|max:255', 
                     'awal_masuk'        => 'required|date_format:Y-m-d',
                     'cuti'              => 'required|digits_between:1,3',
                     'dokumen'           => 'required|mimes:pdf'
@@ -128,7 +132,7 @@ class KaryawanController extends Controller
                         return response()->json(['status'=>422,'data'=>'','message'=>['file_name'=>['File upload fail']]]); 
                     }else{
                         File::delete($destinationPath .$cek->dokumen);
-                        $edit = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'cuti' =>$request->cuti, 'dokumen' =>$fileName); 
+                        $edit = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'divisi' =>$request->divisi , 'cuti' =>$request->cuti, 'dokumen' =>$fileName); 
                         LogActivity::create(['name' => Auth::user()->name, 'email' => Auth::user()->email, 'table'=>'karyawan' ,'action' => 'update', 'data' => json_encode($edit)]);
                         $cek->update($edit); 
                         return response()->json(['status'=>200,'data'=>'','message'=>'Edit Successfully']);
@@ -143,10 +147,11 @@ class KaryawanController extends Controller
                     'nama'              => 'required|max:255', 
                     'nomor_aplikasi'    => 'required|digits_between:1,255',
                     'jabatan'           => 'required|max:255', 
+                    'divisi'            => 'required|max:255', 
                     'awal_masuk'        => 'required|date_format:Y-m-d',
                     'cuti'              => 'required|digits_between:1,3'
                 ]);
-                $edit = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'cuti' =>$request->cuti); 
+                $edit = array('nama' => $request->nama , 'nomor_aplikasi' =>$request->nomor_aplikasi, 'awal_masuk'=>$request->awal_masuk , 'jabatan' =>$request->jabatan , 'divisi' =>$request->divisi , 'cuti' =>$request->cuti); 
                 LogActivity::create(['name' => Auth::user()->name, 'email' => Auth::user()->email, 'table'=>'karyawan' ,'action' => 'update', 'data' => json_encode($edit)]);
                 $cek->update($edit); 
                 return response()->json(['status'=>200,'data'=>'','message'=>'Edit Successfully']);
@@ -167,5 +172,132 @@ class KaryawanController extends Controller
             Karyawan::where('id',$id)->delete();
             return response()->json(['status'=>200,'data'=>'','message'=>'Delete Successfully']);
         }  
+    }
+
+    public function chartByJabatan()
+    {
+        $res = array("gridColumns"=>["jabatan"],"gridData"=>[0]);
+        $results = Karyawan::select('jabatan', \DB::raw('COUNT(id) as total'))
+                    ->groupBy('jabatan')
+                    ->get();
+        if(count($results) > 0){
+            $gridColumns = $this->get_values($results,'jabatan');
+            $gridData    = $this->get_values($results,'total');
+            
+            $res =array("gridColumns"=>$gridColumns,"gridData"=>$gridData);
+        }
+        
+        return response()->json($res);
+    }
+
+    public function chartByDivisi()
+    {
+        $res = array("gridColumns"=>["divisi"],"gridData"=>[0]);
+        $results = Karyawan::select('divisi', \DB::raw('COUNT(id) as total'))
+                    ->groupBy('divisi')
+                    ->get();
+        if(count($results) > 0){
+            $gridColumns = $this->get_values($results,'divisi');
+            $gridData    = $this->get_values($results,'total');
+            
+            $res = $results;
+        }
+        
+        return response()->json($res);
+    }
+
+    private function get_values($array,$key){
+        $dd = [];
+        foreach($array as $k => $value){ 
+                array_push($dd,$value[$key]); 
+        }
+        return $dd;
+    }
+
+    public function print(Request $request)
+    { 
+        $search = $request->filter;
+        $min = $request->min;
+        $max = $request->max;
+        $query = Karyawan::select(['nama','nomor_aplikasi','jabatan','divisi','awal_masuk','cuti'])->orderBy('id','DESC');
+        if ($search) {
+            $like = "%{$search}%";
+            $query = $query->where('nama', 'LIKE', $like)->orWhere('nomor_aplikasi', 'LIKE', $like)->orWhere('jabatan', 'LIKE', $like);
+        }
+        if($min && !$max)
+        {
+            $query = $query->whereDate('awal_masuk','=',$min);
+        }
+        if(!$min && $max)
+        {
+            $query = $query->whereDate('awal_masuk','=',$max);
+        }
+        if($min && $max)
+        {
+            $query = $query->whereDate('awal_masuk','>=',$min)->whereDate('awal_masuk','<=',$max);
+        }
+         
+        return array("gridColumns" =>['nama','nomor_aplikasi','jabatan','divisi','awal_masuk','cuti'],"gridData"=> $query->get());
+    }
+
+    public function downloadFile(Request $request){
+
+        $search = $request->filter;
+        $min = $request->min;
+        $max = $request->max; 
+        $filename = $request->filename;
+        $x=0;
+        $res = [];
+        $query = Karyawan::select(['nama','nomor_aplikasi','jabatan','divisi','awal_masuk','cuti'])->orderBy('id','DESC');
+        if ($search) {
+            $like = "%{$search}%";
+            $query = $query->where('nama', 'LIKE', $like)->orWhere('nomor_aplikasi', 'LIKE', $like)->orWhere('jabatan', 'LIKE', $like);
+        }
+        if($min && !$max)
+        {
+            $query = $query->whereDate('awal_masuk','=',$min);
+        }
+        if(!$min && $max)
+        {
+            $query = $query->whereDate('awal_masuk','=',$max);
+        }
+        if($min && $max)
+        {
+            $query = $query->whereDate('awal_masuk','>=',$min)->whereDate('awal_masuk','<=',$max);
+        }
+        $data =  $query->get();
+
+        $fileName = $filename;
+        $objPHPExcel = new PHPExcel(); 
+        $objPHPExcel->setActiveSheetIndex(0); $objPHPExcel->getActiveSheet()
+        ->setCellValue('A1', 'NAMA KARYAWAN')
+        ->setCellValue('B1', 'NOMOR APLIKASI')
+        ->setCellValue('C1', 'JABATAN')
+        ->setCellValue('D1', 'DIVISI')
+        ->setCellValue('E1', 'AWAL MASUK')
+        ->setCellValue('F1', 'CUTI');
+        
+        $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFont()->setBold(true);  
+        $no=1;
+        $row=2;
+        if(count($data) > 0){
+            foreach ($data as $d){
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, $d->nama);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$row, $d->nomor_aplikasi);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$row, $d->jabatan);
+                $objPHPExcel->getActiveSheet()->setCellValue('D'.$row, $d->divisi);
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$row, $d->awal_masuk);
+                $objPHPExcel->getActiveSheet()->setCellValue('F'.$row, $d->cuti);
+                $no++; 
+                $row++;
+            }
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle('Sheet1'); 
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); 
     }
 }

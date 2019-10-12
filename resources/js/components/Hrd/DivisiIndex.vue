@@ -1,9 +1,9 @@
 <template>
-    <div> 
+  <div> 
 
 <div class="breadcrumb"> 
   <div class="panel">
-    <h1 class="animated fadeInLeft" align="center">KARYAWAN</h1>                
+    <h1 class="animated fadeInLeft" align="center">LIST DIVISI KARYAWAN</h1>                
   </div>
 </div>
 
@@ -13,56 +13,54 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <div id="zero_configuration_table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
-                        
-                     
-                    <div class="row"> 
-                        <div class="col-sm-12 col-md-6">
-                            <div class="dataTables_length" id="zero_configuration_table_length">
-                                <div class="row row-xs">
-                                    <div class="col-md-6">
-                                        <label>Date From :</label>
-                                        <datepicker v-model="startTime.time"  :typeable="true" :format="customFormatter" placeholder="YYYY-MM-DD" @keyup.enter="doFilter"></datepicker>
-                                    </div>
-                                    <div class="col-md-6 mt-3 mt-md-0">
-                                        <label>Date To : </label>
-                                        <datepicker v-model="endtime.time"  :typeable="true" :format="customFormatter" placeholder="YYYY-MM-DD" @keyup.enter="doFilter"></datepicker>    
+                        <div class="row"> 
+                            <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length" id="zero_configuration_table_length">
+                                    <div class="row row-xs">
+                                        <div class="col-md-6">
+                                            <label>Date From :</label>
+                                            <datepicker v-model="startTime.time"  :typeable="true" :format="customFormatter" placeholder="YYYY-MM-DD" @keyup.enter="doFilter"></datepicker>
+                                        </div>
+                                        <div class="col-md-6 mt-3 mt-md-0">
+                                            <label>Date To : </label>
+                                            <datepicker v-model="endtime.time"  :typeable="true" :format="customFormatter" placeholder="YYYY-MM-DD" @keyup.enter="doFilter"></datepicker>    
+                                        </div> 
+                                        <div class="col-md-12">
+                                            <br>
+                                            <label>Search for : </label>
+                                            <input type="text" v-model="filterText" class="form-control form-control-sm" @keyup.enter="doFilter" placeholder="Nama Divisi"> 
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br>
+                                            <button type="button" class="btn btn-raised btn-raised-info m-1"  @click="createItem()"><i class="fa fa-plus"></i> Divisi</button>
+                                            <button type="button" class="btn btn-raised btn-raised-primary m-1"  @click="printItem()"><i class="fa fa-print"></i> Print</button>
+                                            <button type="button" class="btn btn-raised btn-raised-secondary m-1"  @click="downloadItem()"><i class="fa fa-file-excel-o"></i> Download</button>
+                                            <button class="btn btn-raised btn-raised-success m-1" @click.prevent="doFilter"><i class="fa fa-thumbs-o-up position-right"></i> Search </button>
+                                            <button class="btn btn-raised btn-raised-warning m-1" @click.prevent="resetFilter"><i class="fa fa-refresh position-right"></i> Reset Form </button>
+                                            <button class="btn btn-raised btn-raised-danger m-1" @click.prevent="sumSelectedItems()"><i class="fa fa-trash position-right"></i> Delete </button>
+                                        </div>
                                     </div> 
-                                    <div class="col-md-12">
-                                        <br>
-                                        <label>Search for : </label>
-                                        <input type="text" v-model="filterText" class="form-control form-control-sm" @keyup.enter="doFilter" placeholder="Nama / Nomor Aplikasi / Jabatan"> 
-                                    </div>
-                                    <div class="col-md-12">
-                                        <br>
-                                        <button type="button" class="btn btn-raised btn-raised-secondary m-1"  @click="importItem()"><i class="fa fa-upload"></i> Impor Data Karyawan</button>
-                                        <button type="button" class="btn btn-raised btn-raised-primary m-1"  @click="printItem()"><i class="fa fa-print"></i> Print</button>
-                                        <button type="button" class="btn btn-raised btn-raised-dark m-1"  @click="downloadItem()"><i class="fa fa-file-excel-o"></i> Download</button>
-                                        <button type="button" class="btn btn-raised btn-raised-info m-1"  @click="createItem()"><i class="fa fa-plus"></i> User</button>
-                                        <button class="btn btn-raised btn-raised-success m-1" @click.prevent="doFilter"><i class="fa fa-thumbs-o-up position-right"></i> Search </button>
-                                        <button class="btn btn-raised btn-raised-warning m-1" @click.prevent="resetFilter"><i class="fa fa-refresh position-right"></i> Reset Form </button>
-                                        <button class="btn btn-raised btn-raised-danger m-1" @click.prevent="sumSelectedItems()"><i class="fa fa-trash position-right"></i> Delete </button>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div> 
-                        <div class="col-sm-12 col-md-6">
-                            <div id="zero_configuration_table_filter" class="dataTables_filter">
-                                <label>Per Page: 
-                                <select v-model="perPage" aria-controls="zero_configuration_table" class="form-control form-control-sm">
-                                    <option :value=10>10</option>
-                                    <option :value=25>25</option>
-                                    <option :value=50>50</option>
-                                    <option :value=75>75</option>
-                                    <option :value=100>100</option>
-                                </select>
-                                </label>
+                                </div>
+                            </div> 
+                            <div class="col-sm-12 col-md-6">
+                                <div id="zero_configuration_table_filter" class="dataTables_filter">
+                                    <label>Per Page: 
+                                    <select v-model="perPage" aria-controls="zero_configuration_table" class="form-control form-control-sm">
+                                        <option :value=10>10</option>
+                                        <option :value=25>25</option>
+                                        <option :value=50>50</option>
+                                        <option :value=75>75</option>
+                                        <option :value=100>100</option>
+                                    </select>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
+ 
                     <br>
+
                     <vuetable ref="vuetable"
-                        api-url="/hrd-karyawan"
+                        api-url="/divisi"
                         :fields="fields"
                         pagination-path=""
                         :per-page="perPage"
@@ -82,89 +80,140 @@
                         @vuetable-pagination:change-page="onChangePage"
                     ></vuetable-pagination>
                     </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+ 
 
 <!-- MODAL -->
 <div class="container-fluid display-page" id="display-post-category" >
-
-<!-- @import --->
-        <modal  v-if="modal.get('import')" @close="modal.set('import', false)"  >
-        <template slot="header" ><h4>Import Data Karyawan</h4></template>
+ <!-- @create Modal--->
+        <modal  v-if="modal.get('create')" @close="modal.set('create', false)" >
+        <template slot="header" ><h4 align="center">Penambahan Divisi</h4></template>
         <template slot="body" >
-
-            <form method="POST" action="" @submit.prevent="importData()">
+            <form method="POST" action="" @submit.prevent="submitData()">
                 <div class="modal-body">
-
-
  
-<div class="form-group form-animate-text" style="margin-top:40px !important;">
-    <input type="file" name="file" id="file" v-on:change="uploadFile" class="form-control" required="" aria-required="true"> 
-    <p class="center-block">* Type dokumen .xlsx And Max 10 MB</p>
-</div>   
-  
 
 <div class="form-group form-animate-text" style="margin-top:40px !important;">
- <button type="button" class="btn btn-primary" @click.prevent="downloadFile" > <i class="fa fa-download"></i> Download Themplate</button>
-</div>  			 
-
-<div class="form-group form-animate-text" style="margin-top:40px !important;">
-    <div class="invalid-tooltip" v-if="errors['fileUpload']">
-        <p  v-for="error of errors['fileUpload']">
+    <label>Nama Divisi</label>
+    <input type="text" class="form-control" v-model="forms.divisi" required="" aria-required="true">
+    <div class="invalid-tooltip" v-for="error of errors['divisi']">
         {{ error }}
-        </p>
     </div>  
-</div>  	
+</div>            
+     
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" @click="modal.set('import', false)" >Close</button>
-                    <button type="submit" class="btn btn-success">Impor</button>
+                    <button type="button" class="btn btn-default" @click="modal.set('create', false)" >Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+
+            </form>
+        </template>
+        </modal>
+
+
+<!-- @view --->
+        <modal  v-if="modal.get('view')" @close="modal.set('view', false)"  >
+        <template slot="header" ><h4 align="center">Detail Divisi</h4></template>
+        <template slot="body" >
+                <div class="modal-body">
+ 
+
+<div class="form-group form-animate-text" style="margin-top:40px !important;">
+    <label>Nama Divisi</label>
+    <h5 class="media-heading"><b>{{forms.divisi}}</b></h5>  
+</div>    
+
+<div class="form-group form-animate-text" style="margin-top:40px !important;">
+    <label>Created At</label>
+    <h5 class="media-heading"><b>{{this.formatDate(forms.created_at)}}</b></h5> 
+</div>    
+
+    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="modal.set('view', false)" >Close</button>
+                </div>
+        </template>
+        </modal>
+
+        
+<!-- @update --->
+        <modal  v-if="modal.get('edit')" @close="modal.set('edit', false)"  >
+        <template slot="header" ><h4>Edit Divisi</h4></template>
+        <template slot="body" >
+
+            <form method="POST" action="" @submit.prevent="updateData()">
+                <div class="modal-body">
+ 
+
+<div class="form-group form-animate-text" style="margin-top:40px !important;">
+    <label>Role Name</label>
+    <input type="text" class="form-control" v-model="forms.divisi" required="" aria-required="true">
+    <div class="invalid-tooltip" v-for="error of errors['divisi']">
+        {{ error }}
+    </div>  
+</div>    			 
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="modal.set('edit', false)" >Close</button>
+                    <button type="submit" class="btn btn-success">Edit</button>
                 </div>
             </form>
         </template>
         </modal>
-</div>
 
-    </div>
+
+</div>
+<!-- MODAL -->
+
+</div>
 </template>
 
-<script>
-
-
-     class Errors{
-            constructor(){
-                this.errors = {};
-            }
-            get(field){
-                if(this.errors[field]){
-                    return  this.errors[field][0];
+<script> 
+        /* CRUD FORM */
+        class CrudForm {
+            constructor(data) {
+                this.originalData = data;
+                for(let field in data){
+                    this[field] = data[field];
                 }
             }
-            record(errors){
-                this.errors = errors.response.data;
+            reset(){
+                for(let field in this.originalData){
+                    this[field] = '';
+                }
             }
-            any(){
-                return Object.keys(this.errors).length > 0;
+            /*  Set a value to the temp , verify if has this item and update  */
+            setFillItem(item , index){
+                for(let field in this.originalData){
+                    if(field in item){
+                        this[field] = item[field];
+                    }else{
+                        // if is index
+                        if(field == 'index'){ this[field] = index; }
+                    }
+                }
             }
-            has(field){
-                return this.errors.hasOwnProperty(field);
+            data(){
+                let data = Object.assign({} , this);
+                delete data.originalData;
+                delete data.errors;
+                return data;
             }
-            clear(field){
-                if(field) delete this.errors[field];
-                this.errors = {};
-            }
-            clearAll(){
-                this.errors = "";
-            }
-    }
-
-  /* CRUD MODAL */
+        }
+        /* CRUD MODAL */
         class CrudModal{
             constructor(data){
                 this.modal = data;
@@ -207,8 +256,7 @@
                 }
             }
         };
-        
-        
+     
 import Vue from 'vue'
 import accounting from 'accounting'
 import moment from 'moment'
@@ -221,9 +269,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
-import AllActions from '../Buttons/AllActions.vue' 
-Vue.component('all-actions', AllActions)
- 
+import AllActions from '../Buttons/AllActions.vue'
 
 Vue.use(VueSweetalert2)
 Vue.use(Loading)
@@ -237,13 +283,14 @@ export default {
     VuetablePaginationInfo,
     Datepicker,  
     'modal': Modal,
+    'all-actions': AllActions,
   },
   data () {
-    return {  
-        errors: new Errors() ,
+    return { 
+        errors: [],
         token: localStorage.getItem('token'), 
-        modal:new CrudModal({import:false}),
-        fileUpload:'',
+        forms:new CrudForm({index:'',  id:'' , divisi:'', created_at:''}),
+        modal:new CrudModal({create:false , view:false  , edit:false}),
 	    isLoading: false,
         perPage: 10,
         startTime: {
@@ -288,37 +335,24 @@ export default {
             title: 'No',
             titleClass: 'text-center',
             dataClass: 'text-center'
-            }, 
-            {
-                name: 'nama',
-                title: 'Name',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
             },
             {
-                name: 'nomor_aplikasi',
-                title: 'Nomor Aplikasi',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
-            }, 
-            {
-                name: 'jabatan',
-                title: 'Jabatan',
-                titleClass: 'text-center',
-                dataClass: 'text-center'
-            }, 
+            name: '__checkbox:id',
+            titleClass: 'text-center',
+            dataClass: 'text-center',
+            },
             {
                 name: 'divisi',
-                title: 'Divisi',
+                title: 'Nama Divisi',
                 titleClass: 'text-center',
                 dataClass: 'text-center'
-            },
+            }, 
             {
-                name: 'awal_masuk',
-                title: 'Tanggal Masuk',
+                name: 'created_at',
+                title: 'Created At',
                 titleClass: 'text-center',
                 dataClass: 'text-center',
-                callback: 'formatDate|DD-MM-YYYY'
+                callback: 'formatDate|DD-MM-YYYY HH:mm:ss'
             }, 
             {
                 name: '__component:all-actions',
@@ -364,56 +398,62 @@ export default {
         },
         methods: {
 
-            importData() { 
-                        let masuk = new FormData(); 
-                        masuk.set('fileUpload', this.fileUpload)  
-                        axios.post('/hrd-import-data-karyawan', masuk).then(response => {
-                            if(!response.data){ 
-                                window.location.href = window.webURL; 
-                            }else{ 
-                                if(response.data.status == 200){ 
-                                    this.errors = '';
-                                    this.fileUpload = '';  
-                                    this.resetFilter(); 
-                                    this.modal.set('import', false);
-                                    this.success(response.data.message);
-                                }else{
-                                    this.errors = response.data.message 
-                                }
-                            }
-                        }).catch(error => {
-                            if (! _.isEmpty(error.response)) {
-                                if (error.response.status = 422) {
-                                   this.errors = error.response.data.errors
-                                }else if (error.response.status = 500) {
-                                    this.error(error.response.data.message); 
-                                }else{
-                                    this.$router.push('/page-not-found');
-                                }
-                            }
+            updateData() { 
+                axios.put('/divisi/'+this.forms.id, this.forms).then(response => {
+                    if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                         if(response.data.status == 200){  
+                            this.resetForms();
+                            this.modal.set('edit', false);
+                            this.resetFilter(); 
+                            this.success(response.data.message);
+                        }else{
+                             this.errors = response.data.message;
+                        }
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 422) {
+                             this.errors = error.response.data.errors; 
+                        }else if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.$router.push('/page-not-found');
+                        }
+                    }
                                         
-                        }) 
-                    
+                }) 
             },
 
-            uploadFile(event) {
-               let files = event.target.files || e.dataTransfer.files;
-               if (files.length) this.fileUpload = files[0]; 
-           },
-
-            downloadFile(){  
-                axios({
-                url: '/hrd-download-import-themplate',
-                method: 'POST', 
-                responseType: 'blob', // important
-                }).then((response) => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'impor-data-karyawan.xlsx');
-                document.body.appendChild(link);
-                link.click();
-                }); 
+            submitData() { 
+                axios.post('/divisi', this.forms).then(response => {
+                    if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                         if(response.data.status == 200){   
+                            this.resetForms();
+                            this.modal.set('create', false);
+                            this.resetFilter(); 
+                            this.success(response.data.message);
+                        }else{
+                            this.errors = response.data.message;
+                            // this.resultError(response.data.message)
+                        }
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 422) {
+                            this.errors = error.response.data.errors;
+                            // this.resultError(error.response.data.errors)
+                        }else if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.$router.push('/page-not-found');
+                        }
+                    }
+                                        
+                }) 
             },
 
             doFilter () {
@@ -454,7 +494,50 @@ export default {
                     }
                 }
             },
-             
+            sumSelectedItems() {
+                var ttl = this.$refs.vuetable.selectedTo;
+                if(ttl.length <= 0)
+                {
+                    this.question('Choose data for delete');
+                }else{
+                    this.$swal({
+                        title: 'Are you sure ?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var join_selected_values = ttl.join(","); 
+                                axios.delete('/divisi/delete-all/'+ join_selected_values)
+                                .then(response => {
+                                    if(!response.data){ 
+                                        window.location.href = window.webURL; 
+                                    }else{
+                                        if(response.data.status == 200){  
+                                                    this.resetFilter();
+                                                    this.success(response.data.message);
+                                        }else{
+                                                    this.resultError(response.data.message)
+                                        } 
+                                    }
+                                }).catch(error => {
+                                    if (! _.isEmpty(error.response)) {
+                                        if (error.response.status = 422) {
+                                             this.resultError(error.response.data.errors)
+                                        }else if (error.response.status = 500) {
+                                            this.$router.push('/server-error');
+                                        }else{
+                                            this.$router.push('/page-not-found');
+                                        }
+                                    } 
+                                });
+                        }
+                    })
+                }
+                
+            },
            deleteItem(item ,index = this.indexOf(item)){
                 this.$swal({
                     title: 'Are you sure ?',
@@ -465,13 +548,12 @@ export default {
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
-                        axios.delete('/hrd-karyawan/'+ item.id)
+                        axios.delete('/divisi/'+ item.id)
                         .then(response => {
                             if(!response.data){ 
                                 window.location.href = window.webURL; 
                             }else{
-                                if(response.data.status == 200){ 
-                                            this.errorNya = '';
+                                if(response.data.status == 200){  
                                             this.resetFilter();
                                             this.success(response.data.message);
                                 }else{
@@ -481,7 +563,7 @@ export default {
                         }).catch(error => {
                             if (! _.isEmpty(error.response)) {
                                 if (error.response.status = 422) {
-                                   this.resultError(error.response.message)
+                                        this.resultError(error.response.data.errors)
                                 }else if (error.response.status = 500) {
                                     this.$router.push('/server-error');
                                 }else{
@@ -493,10 +575,13 @@ export default {
                 }) 
             }  ,
             editItem(item ,index = this.indexOf(item)){
-                this.$router.push({name:'HrdKaryawanEdit', params: {id: this.diacak(item.id),typenya:'edit-karyawan',rowDatanya:item }});
-            },printItem(){ 
+                this.errors=[]
+                this.forms.setFillItem(item , index );
+                this.modal.set('edit', true);
+             },
+            printItem(){
                this.isLoading = true;
-               axios.get('/print-karyawan?filter='+this.filterText+'&min='+this.startTime.time+'&max='+this.endtime.time).then((response) => {
+               axios.get('/print-divisi?filter='+this.filterText+'&min='+this.startTime.time+'&max='+this.endtime.time).then((response) => {
                    if(!response.data){ 
                         window.location.href = window.webURL; 
                     }else{ 
@@ -519,10 +604,10 @@ export default {
                         'filter' : this.filterText, 
                         'min' : this.startTime.time, 
                         'max' : this.endtime.time,
-                        'filename':'download-data-karyawan.xls'
+                        'filename':'download-divisi.xls'
                     }
                     axios({
-                    url: '/download-excel-karyawan',
+                    url: '/download-excel-divisi',
                     method: 'POST',
                     data: masuk,
                     responseType: 'blob', // important
@@ -530,22 +615,21 @@ export default {
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;
-                    link.setAttribute('download', 'download-data-karyawan.xls');
+                    link.setAttribute('download', 'download-divisi.xls');
                     document.body.appendChild(link);
                     link.click();
                     }); 
             } ,
-            importItem() {
-                this.file= '';
-                this.errors= [];
-                this.modal.set('import', true);
-            } ,
             createItem() {
-                this.$router.push({name:'HrdKaryawanAdd', params: {typenya:'add-karyawan'}});
+                this.errors=[]
+                this.resetForms();
+                this.modal.set('create', true);
             } ,
             viewItem(item ,index = this.indexOf(item)){
-                this.$router.push({name:'HrdKaryawanDetail', params: {id: this.diacak(item.id),typenya:'detail-karyawan',rowDatanya:item }});
-            } ,
+                this.errors=[]
+                this.forms.setFillItem(item , index );
+                this.modal.set('view', true);
+             } ,
             formatDate (value, fmt = 'DD-MM-YYYY HH:mm:ss') {
                 return (value == null)
                     ? ''
@@ -567,7 +651,7 @@ export default {
             },
             onLoadingError() {
                this.isLoading = true;
-               axios.get('hrd-karyawan').then((response) => {
+               axios.get('/divisi').then((response) => {
                    if(!response.data){ 
                         window.location.href = window.webURL; 
                     }else{ 
@@ -588,6 +672,11 @@ export default {
                 return moment(date).format('YYYY-MM-DD');
             },
 
+            resetForms () {
+         		this.forms.reset();
+                window.errors.clearAll();
+            },
+
             resetFilter () {
                 this.filterText = ''
                 this.startTime.time = ''
@@ -597,18 +686,22 @@ export default {
 
             fetchIt(){
                 this.loading();
-                axios.get('/user/get-hrd').then((response) => {
+                axios.get('/user/get-profile').then((response) => {
                     if(!response.data){ 
                         window.location.href = window.webURL; 
-                    }else{ 
-                        if(response.data.status != 200){ 
-                            window.location.href = window.webURL; 
+                    }else{
+                        if(response.data.status == 200){
+                            if(response.data.data.role.role_code == 'hrd' || response.data.data.role.role_code == 'dirut' || response.data.data.role.role_code == 'root'){
+                                console.log(true);
+                            }else{
+                                window.location.href = window.webURL; 
+                            } 
                         }
                     }
                 }).catch(error => {
                     if (! _.isEmpty(error.response)) {
                         if (error.response.status = 422) {
-                            this.$router.push('/server-error');
+                            this.resultError(error.response.data.errors)
                         }else if (error.response.status = 500) {
                             this.$router.push('/server-error');
                         }else{
@@ -723,7 +816,10 @@ export default {
 }
 .pagination-info {
   float: left;
-} 
+}
+.modal-backdrop {
+z-index: -1;
+}
 .modal-mask {
   position: fixed;
   z-index: 9998;

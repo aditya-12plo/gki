@@ -155,8 +155,20 @@
                   <ul>
                     <li class="nav-item ">
                       <a href="/operasional-view#/hrd-chart-karyawan">
-                      <i class="nav-icon mr-2 fa fa-users"></i>
+                      <i class="nav-icon mr-2 i-Bar-Chart"></i>
                       <span class="item-name">Chart Karyawan</span>
+                      </a>
+                    </li> 
+                    <li class="nav-item ">
+                      <a href="/operasional-view#/hrd-list-jabatan-karyawan">
+                      <i class="nav-icon mr-2 i-Checked-User"></i>
+                      <span class="item-name">Jabatan Karyawan</span>
+                      </a>
+                    </li> 
+                    <li class="nav-item ">
+                      <a href="/operasional-view#/hrd-list-divisi-karyawan">
+                      <i class="nav-icon mr-2 i-Library"></i>
+                      <span class="item-name">Divisi Karyawan</span>
                       </a>
                     </li> 
                     <li class="nav-item ">

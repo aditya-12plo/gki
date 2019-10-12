@@ -27,9 +27,18 @@
             <div class="form-group">
                 <label>Jabatan</label>
                 <select class="form-control" v-model="forms.jabatan" required="" aria-required="true">
-                    <option v-for="status in jabatanDropdown" :value="status">{{ status }}</option>
+                    <option v-for="jabatan in jabatanDropdown" :value="jabatan.jabatan">{{ jabatan.jabatan }}</option>
                 </select> 
-                <div class="invalid-tooltip" v-for="error of errors['status']">
+                <div class="invalid-tooltip" v-for="error of errors['jabatan']">
+                    {{ error }}
+                </div> 
+            </div>  
+            <div class="form-group">
+                <label>Divisi</label>
+                <select class="form-control" v-model="forms.divisi" required="" aria-required="true">
+                    <option v-for="divisi in divisiDropdown" :value="divisi.divisi">{{ divisi.divisi }}</option>
+                </select> 
+                <div class="invalid-tooltip" v-for="error of errors['divisi']">
                     {{ error }}
                 </div> 
             </div>  
@@ -194,8 +203,9 @@ export default {
         position: 'up right',
         closeBtn: true,  
         errors: [], 
-        jabatanDropdown: ['Direktur','Wakil Direktur','Manager','Staff'],
-        forms: new CrudForm({id:'', nama:'', nomor_aplikasi:'', jabatan:'', awal_masuk:'', cuti:'', dokumen:''}), 
+        jabatanDropdown: [],
+        divisiDropdown: [],
+        forms: new CrudForm({id:'', nama:'', nomor_aplikasi:'', jabatan:'',divisi:'', awal_masuk:'', cuti:'', dokumen:''}), 
         token: localStorage.getItem('token'), 
 
     }
@@ -228,6 +238,44 @@ export default {
                 this.$router.push('/page-not-found');
                 } 
             },
+            dataJabatan () {
+               this.isLoading = true;
+               axios.get('jabatan-dropdown').then((response) => {
+                   if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                        this.isLoading = false;
+                        this.jabatanDropdown = response.data;
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.isLoading = false;
+                        }
+                    }
+                });
+            },
+            dataDivisi () {
+               this.isLoading = true;
+               axios.get('divisi-dropdown').then((response) => {
+                   if(!response.data){ 
+                        window.location.href = window.webURL; 
+                    }else{ 
+                        this.isLoading = false;
+                        this.divisiDropdown = response.data;
+                    }
+                }).catch(error => {
+                    if (! _.isEmpty(error.response)) {
+                        if (error.response.status = 500) {
+                            this.$router.push('/server-error');
+                        }else{
+                            this.isLoading = false;
+                        }
+                    }
+                });
+            },
              
             submitData() {
                 this.$swal({
@@ -245,12 +293,14 @@ export default {
                             masuk.set('nama', this.forms.nama) 
                             masuk.set('nomor_aplikasi', this.forms.nomor_aplikasi) 
                             masuk.set('jabatan', this.forms.jabatan) 
+                            masuk.set('divisi', this.forms.divisi) 
                             masuk.set('awal_masuk', this.customFormatter(this.forms.awal_masuk))  
                             masuk.set('cuti', this.forms.cuti)    
                         }else{ 
                             masuk.set('nama', this.forms.nama) 
                             masuk.set('nomor_aplikasi', this.forms.nomor_aplikasi) 
                             masuk.set('jabatan', this.forms.jabatan) 
+                            masuk.set('divisi', this.forms.divisi) 
                             masuk.set('awal_masuk', this.customFormatter(this.forms.awal_masuk))  
                             masuk.set('cuti', this.forms.cuti)  
                             masuk.set('dokumen', this.forms.dokumen)  
@@ -344,7 +394,9 @@ export default {
         },
 		mounted() { 
             this.errors=[]
-          this.dataAction(); 
+          this.dataAction();
+          this.dataJabatan(); 
+          this.dataDivisi(); 
         }
 
 }

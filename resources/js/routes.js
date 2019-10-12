@@ -19,8 +19,12 @@ import HrdKaryawan from './components/Hrd/Index.vue';
 import HrdKaryawanAdd from './components/Hrd/Add.vue';
 import HrdKaryawanDetail from './components/Hrd/Detail.vue';
 import HrdKaryawanEdit from './components/Hrd/Edit.vue';
+import HrdKaryawanJabatan from './components/Hrd/JabatanIndex.vue';
+import HrdKaryawanDivisi from './components/Hrd/DivisiIndex.vue';
+import HrdKaryawanChart from './components/Hrd/Chart.vue';
 import UkkPeps from './components/Ukk/IndexPep.vue';
 import UkkDttot from './components/Ukk/IndexDttot.vue';
+import Print from './components/Prints/Index.vue';
 
 let routes=[
 {
@@ -28,6 +32,15 @@ let routes=[
     name: 'home',
     component: Home
 }, 
+
+/** Print */
+{
+	path:'/print',
+	name: 'Print',
+	component:Print,
+	 props: true
+},
+
 /** Users */
 {
 	path:'/profile',
@@ -68,6 +81,21 @@ let routes=[
 	path:'/hrd-list-karyawan',
     name: 'HrdKaryawan',
     component: HrdKaryawan
+},
+{
+	path:'/hrd-chart-karyawan',
+    name: 'HrdKaryawanChart',
+    component: HrdKaryawanChart
+},
+{
+	path:'/hrd-list-jabatan-karyawan',
+    name: 'HrdKaryawanJabatan',
+    component: HrdKaryawanJabatan
+},
+{
+	path:'/hrd-list-divisi-karyawan',
+    name: 'HrdKaryawanDivisi',
+    component: HrdKaryawanDivisi
 },
 {
 	path:'/karyawan-add',
