@@ -24,6 +24,7 @@ import HrdKaryawanDivisi from './components/Hrd/DivisiIndex.vue';
 import HrdKaryawanChart from './components/Hrd/Chart.vue';
 import UkkPeps from './components/Ukk/IndexPep.vue';
 import UkkDttot from './components/Ukk/IndexDttot.vue';
+import UkkDttotKaryawan from './components/Ukk/UkkDttotKaryawan.vue';
 import Print from './components/Prints/Index.vue';
 
 let routes=[
@@ -127,6 +128,12 @@ let routes=[
     name: 'UkkDttot',
     component: UkkDttot
 },
+{
+	path:'/ukk-dttot/karyawan/:id',
+    name: 'UkkDttotKaryawan',
+    component: UkkDttotKaryawan,
+	props: true
+}, 
 
 
 /** Perorangan */

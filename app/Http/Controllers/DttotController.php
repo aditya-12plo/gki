@@ -245,7 +245,7 @@ class DttotController extends Controller
                 $like = "%{$d->nama}%";
                 $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->get();
                 if(count($cek) > 0){ 
-                    $res[$x] = array('nama_karyawan'=>$d->nama,'nomor_aplikasi'=>$d->nomor_aplikasi,'jabatan'=>$d->jabatan,'awal_masuk'=>$d->awal_masuk,'dttot'=>$cek); 
+                    $res[$x] = array('nama_karyawan'=>$d->nama,'nomor_aplikasi'=>$d->nomor_aplikasi,'jabatan'=>$d->jabatan,'divisi'=>$d->divisi,'awal_masuk'=>$d->awal_masuk,'dttot'=>$cek); 
                 }
     
                 $x++;
@@ -261,6 +261,51 @@ class DttotController extends Controller
         }
 
     }
+
+    
+    public function withDttotKaryawan(Request $request){
+        $id = $request->id;
+        $filename = $request->filename;
+        $min = $request->min;
+        $max = $request->max;
+        $x=0;
+        $data = DataExtract::where('dokumen_dttot_id',$id)->get();
+        $dataKaryawan = Karyawan::orderBy('id','DESC');
+        if($min && !$max)
+        {
+            $dataKaryawan = $dataKaryawan->whereDate('awal_masuk','=',$min);
+        }
+        if(!$min && $max)
+        {
+            $dataKaryawan = $dataKaryawan->whereDate('awal_masuk','=',$max);
+        }
+        if($min && $max)
+        {
+            $dataKaryawan = $dataKaryawan->whereDate('awal_masuk','>=',$min)->whereDate('awal_masuk','<=',$max);
+        }
+        $dataQuery =  $dataKaryawan->get();
+
+        $res = [];
+
+        if(count($data) > 0){
+
+            foreach($dataQuery as $k){
+                $like = "%{$k->nama}%";
+                $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->get();
+                if(count($cek) > 0){
+                    foreach ($cek as $d){
+                        $ss = json_decode($d->string,true);
+                        $ss = $this->getDataFromArray($ss); 
+                        $res[$x] = ['nama_karyawan'=>$k->nama,'nomor_aplikasi'=>$k->nomor_aplikasi, 'jabatan'=>$k->jabatan, 'divisi'=>$k->divisi, 'awal_masuk'=>$k->awal_masuk, 'nama'=>$ss['nama'], 'alias'=>$ss['alias'], 'lahir'=>$ss['lahir'], 'negara'=>$ss['negara'], 'alamat'=>$ss['alamat'], 'keterangan'=>$ss['keterangan']];
+                        $x++;
+                    }
+                }
+            }
+              
+        }
+            return response()->json($res);
+    }
+
 
     public function cobaDttotNonPerorangan(Request $request){
         $id = $request->id;
@@ -605,9 +650,76 @@ class DttotController extends Controller
 
     }
 
+    private function arrayCompareKarywan($array){
+        $no=0; 
+        $res = [];
+        if(count($array) > 0){
+            foreach ($array as $a){
+                foreach ($a['dttot'] as $d){
+                    $ss = json_decode($d->string);
+                    $res = $this->getDataFromArray($ss); 
+                    $res[$no] = ['nama_karyawan'=>$a['nama_karyawan'],'nomor_aplikasi'=>$a['nomor_aplikasi'], 'jabatan'=>$a['jabatan'], 'divisi'=>$a['divisi'], 'awal_masuk'=>$a['awal_masuk'], 'nama'=>$res['nama'], 'alias'=>$res['alias'], 'lahir'=>$res['lahir'], 'negara'=>$res['negara'], 'alamat'=>$res['alamat'], 'keterangan'=>$res['keterangan']];
+                    $no++;
+                }
+            }
+        }
 
-    private function downloadCompareKarywan($array)
-    { 
+        return response()->json($res);
+    }
+
+    public function excelDttotKaryawan(Request $request){
+        $array = $request->data;
+        $fileName = $request->fileName.'.xls';      
+        $objPHPExcel = new PHPExcel(); 
+        $objPHPExcel->setActiveSheetIndex(0); 
+        $objPHPExcel->getActiveSheet()
+                    ->setCellValue('A1', 'NAMA KARYAWAN')
+                    ->setCellValue('B1', 'NOMOR APLIKASI')
+                    ->setCellValue('C1', 'JABATAN')
+                    ->setCellValue('D1', 'DIVISI')
+                    ->setCellValue('E1', 'AWAL MASUK') 
+                    ->setCellValue('F1', 'NAMA DTTOT')
+                    ->setCellValue('G1', 'NAMA DTTOT ALIAS')
+                    ->setCellValue('H1', 'TEMPAT TANGGAL LAHIR DTTOT')
+                    ->setCellValue('I1', 'NEGARA DTTOT')
+                    ->setCellValue('J1', 'ALAMAT DTTOT')
+                    ->setCellValue('K1', 'KETERANGAN DTTOT')
+                    ;
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);  
+        $no=1;
+        $row=2; 
+
+        if(count($array) > 0){
+            //Put each record in a new cell
+            foreach ($array as $a){
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, $a['nama_karyawan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$row, $a['nomor_aplikasi']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$row, $a['jabatan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$row, $a['divisi']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$row, $a['awal_masuk']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$row, $a['nama']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$row, $a['alias']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('H'.$row, $a['lahir']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('I'.$row, $a['negara']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('J'.$row, $a['alamat']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('K'.$row, $a['keterangan']);
+                    $no++; 
+                    $row++;  
+            }
+
+        }
+         
+        $objPHPExcel->getActiveSheet()->setTitle('Sheet1'); 
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); 
+
+    }
+
+    private function downloadCompareKarywan($array){ 
         $fileName = 'export';            
         $objPHPExcel = new PHPExcel(); 
         $objPHPExcel->setActiveSheetIndex(0); 
@@ -615,16 +727,17 @@ class DttotController extends Controller
                     ->setCellValue('A1', 'NAMA KARYAWAN')
                     ->setCellValue('B1', 'NOMOR APLIKASI')
                     ->setCellValue('C1', 'JABATAN')
-                    ->setCellValue('D1', 'AWAL MASUK') 
-                    ->setCellValue('E1', 'NAMA DTTOT')
-                    ->setCellValue('F1', 'NAMA DTTOT ALIAS')
-                    ->setCellValue('G1', 'TEMPAT TANGGAL LAHIR DTTOT')
-                    ->setCellValue('H1', 'NEGARA DTTOT')
-                    ->setCellValue('I1', 'ALAMAT DTTOT')
-                    ->setCellValue('J1', 'KETERANGAN DTTOT')
+                    ->setCellValue('D1', 'DIVISI')
+                    ->setCellValue('E1', 'AWAL MASUK') 
+                    ->setCellValue('F1', 'NAMA DTTOT')
+                    ->setCellValue('G1', 'NAMA DTTOT ALIAS')
+                    ->setCellValue('H1', 'TEMPAT TANGGAL LAHIR DTTOT')
+                    ->setCellValue('I1', 'NEGARA DTTOT')
+                    ->setCellValue('J1', 'ALAMAT DTTOT')
+                    ->setCellValue('K1', 'KETERANGAN DTTOT')
                     ;
 
-        $objPHPExcel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);  
+        $objPHPExcel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);  
         $no=1;
         $row=2; 
 
@@ -637,13 +750,14 @@ class DttotController extends Controller
                     $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, $a['nama_karyawan']);
                     $objPHPExcel->getActiveSheet()->setCellValue('B'.$row, $a['nomor_aplikasi']);
                     $objPHPExcel->getActiveSheet()->setCellValue('C'.$row, $a['jabatan']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$row, $a['awal_masuk']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$row, $res['nama']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$row, $res['alias']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$row, $res['lahir']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('H'.$row, $res['negara']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('I'.$row, $res['alamat']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('J'.$row, $res['keterangan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$row, $a['divisi']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$row, $a['awal_masuk']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$row, $res['nama']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$row, $res['alias']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('H'.$row, $res['lahir']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('I'.$row, $res['negara']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('J'.$row, $res['alamat']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('K'.$row, $res['keterangan']);
                     $no++; 
                     $row++; 
                 } 

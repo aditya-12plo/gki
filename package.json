@@ -18,6 +18,8 @@
         "sass-loader": "^7.1.0"
     },
     "dependencies": {
+        "@syncfusion/ej2-vue-buttons": "^17.3.16",
+        "@syncfusion/ej2-vue-grids": "^17.3.16",
         "accounting": "^0.4.1",
         "babel-cli": "^6.26.0",
         "babel-plugin-transform-runtime": "^6.23.0",
@@ -32,6 +34,8 @@
         "vue": "^2.6.10",
         "vue-chartjs": "^3.4.2",
         "vue-events": "^3.1.0",
+        "vue-good-table": "^2.18.0",
+        "vue-html-to-paper": "^1.1.1",
         "vue-loading-overlay": "^3.2.0",
         "vue-masked-input": "^0.5.2",
         "vue-router": "^3.1.3",

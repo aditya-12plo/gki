@@ -36,8 +36,8 @@
                                     <div class="col-md-12">
                                         <br> 
                                         <button type="button" class="btn btn-raised btn-raised-info m-1"  @click="createItem()"><i class="fa fa-plus"></i> Dokumen</button>
-                                        <button class="btn btn-raised btn-raised-success m-1" @click.prevent="doFilter">Search <i class="fa fa-thumbs-o-up position-right"></i></button>
-                                        <button class="btn btn-raised btn-raised-warning m-1" @click.prevent="resetFilter">Reset Form <i class="fa fa-refresh position-right"></i></button> 
+                                        <button class="btn btn-raised btn-raised-success m-1" @click.prevent="doFilter"><i class="fa fa-thumbs-o-up position-right"></i> Search </button>
+                                        <button class="btn btn-raised btn-raised-warning m-1" @click.prevent="resetFilter"><i class="fa fa-refresh position-right"></i> Reset Form </button> 
                                     </div>
                                 </div> 
                             </div>
@@ -689,6 +689,21 @@ export default {
             },
 
             downloadKaryawanItem(item ,index = this.indexOf(item)){
+                if(item.status == 'complete'){
+                    var masuk = 
+                    {
+                        'id' : item.id, 
+                        'min' : this.startTime.time, 
+                        'max' : this.endtime.time, 
+                        'filename' : item.dokumen_name, 
+                    }
+                    this.$router.push({name:'UkkDttotKaryawan', params: {id: this.diacak(item.id),rowDatanya:masuk }});
+                }else{
+                    this.error('document status must be complete');
+                } 
+            },
+
+            downloadKaryawanExcelItem(item ,index = this.indexOf(item)){
                 if(item.status == 'complete'){
                     var masuk = 
                     {

@@ -78,6 +78,8 @@ Route::post('/ukk-dttot-download-excel-non-perorangan', 'DttotController@downloa
 Route::post('/ukk-dttot-download-excel-perorangan', 'DttotController@downloadDttotPerorangan');
 Route::post('/ukk-dttot-download-excel-karyawan', 'DttotController@downloadDttotKaryawan');
 Route::post('/ukk-dttot-download-file-pdf', 'DttotController@downloadFileDttot');
+Route::get('/ukk-dttot-with-karyawan', 'DttotController@withDttotKaryawan');
+Route::post('/ukk-dttot-excel-karyawan', 'DttotController@excelDttotKaryawan');
 
 Route::get('/users-view', 'ViewController@index');
 Route::get('/roles-view', 'ViewController@index');
