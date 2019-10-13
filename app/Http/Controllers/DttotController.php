@@ -294,8 +294,8 @@ class DttotController extends Controller
                 $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->get();
                 if(count($cek) > 0){
                     foreach ($cek as $d){
-                        $ss = json_decode($d->string,true);
-                        $ss = $this->getDataFromArray($ss); 
+                        $aa = json_decode($d->string,true);
+                        $ss = $this->getDataFromArray($aa); 
                         $res[$x] = ['nama_karyawan'=>$k->nama,'nomor_aplikasi'=>$k->nomor_aplikasi, 'jabatan'=>$k->jabatan, 'divisi'=>$k->divisi, 'awal_masuk'=>$k->awal_masuk, 'nama'=>$ss['nama'], 'alias'=>$ss['alias'], 'lahir'=>$ss['lahir'], 'negara'=>$ss['negara'], 'alamat'=>$ss['alamat'], 'keterangan'=>$ss['keterangan']];
                         $x++;
                     }
@@ -307,6 +307,101 @@ class DttotController extends Controller
     }
 
 
+    
+    public function withDttotNonPerorangan(Request $request){
+        $id = $request->id;
+        $filename = $request->filename;
+        $min = $request->min;
+        $max = $request->max;
+        $x=0;
+        $data = DataExtract::where('dokumen_dttot_id',$id)->get();
+        $NonPerorangan = ViewProfilNonPerorangan::orderBy('id','DESC');
+        if($min && !$max)
+        {
+            $NonPerorangan = $NonPerorangan->whereDate('Created_at','=',$min);
+        }
+        if(!$min && $max)
+        {
+            $NonPerorangan = $NonPerorangan->whereDate('Created_at','=',$max);
+        }
+        if($min && $max)
+        {
+            $NonPerorangan = $NonPerorangan->whereDate('Created_at','>=',$min)->whereDate('Created_at','<=',$max);
+        }
+        $dataQuery =  $NonPerorangan->get();
+
+        $res = [];
+
+        if(count($data) > 0){
+
+            foreach($dataQuery as $k){
+                $like  = "%{$k->nama_perusahaan}%";
+                $like2 = "%{$k->no_rekening_bank_perusahaan}%";
+                $like3 = "%{$k->nama_bo}%";
+                $like4 = "%{$k->nama_alias_bo}%";
+                $like5 = "%{$k->nomor_identitas_bo}%"; 
+                $like6 = "%{$k->nama_knp}%";
+                $like7 = "%{$k->nama_alias_knp}%";
+                $like8 = "%{$k->nomor_identitas_knp}%"; 
+                $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like2]])
+                ->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like3]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like4]])
+                ->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like6]])
+                ->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like7]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like8]])->get();
+                if(count($cek) > 0){
+                    foreach ($cek as $d){
+                        $aa = json_decode($d->string,true);
+                        $ss = $this->getDataFromArray($aa); 
+                        $res[$x] = [
+                            'nomor_akun'                    => $k->nomor_akun,
+                            'nama_perusahaan'               => $k->nama_perusahaan,
+                            'nomor_ijin_usaha'              => $k->nomor_ijin_usaha,
+                            'bidang_usaha'                  => $k->bidang_usaha,
+                            'tempat_pendirian'              => $k->tempat_pendirian,
+                            'tanggal_pendirian'             => $k->tanggal_pendirian, 
+                            'bentuk_hukum'                  => $k->bentuk_hukum,
+                            'npwp_perusahaan'               => $k->npwp_perusahaan,
+                            'profil_perusahaan'             => $k->profil_perusahaan,
+                            'no_rekening_bank_perusahaan'   => $k->no_rekening_bank_perusahaan,
+                            'nomor_telepon_perusahaan'      => $k->nomor_telepon_perusahaan,
+                            'email_perusahaan'              => $k->email_perusahaan,
+                            'wilayah_domisili_perusahaan'   => $k->wilayah_domisili_perusahaan,
+                            'alamat_perusahaan'             => $k->alamat_perusahaan,
+                            'nama_bo'                       => $k->nama_bo,
+                            'nama_alias_bo'                 => $k->nama_alias_bo,
+                            'jenis_kartu_identitas_bo'      => $k->jenis_kartu_identitas_bo, 
+                            'nomor_identitas_bo'            => $k->nomor_identitas_bo, 
+                            'masa_berlaku_bo'               => $k->masa_berlaku_bo, 
+                            'npwp_bo'                       => $k->npwp_bo, 
+                            'tempat_lahir_bo'               => $k->tempat_lahir_bo, 
+                            'tanggal_lahir_bo'              => $k->tanggal_lahir_bo, 
+                            'status_perkawinan_bo'          => $k->status_perkawinan_bo, 
+                            'jenis_kelamin_bo'              => $k->jenis_kelamin_bo, 
+                            'nomor_telepon_bo'              => $k->nomor_telepon_bo, 
+                            'alamat_bo'                     => $k->alamat_bo, 
+                            'alamat_sekarang_bo'            => $k->alamat_sekarang_bo, 
+                            'nama_knp'                      => $k->nama_knp, 
+                            'nama_alias_knp'                => $k->nama_alias_knp, 
+                            'jenis_kartu_identitas_knp'     => $k->jenis_kartu_identitas_knp, 
+                            'nomor_identitas_knp'           => $k->nomor_identitas_knp, 
+                            'masa_berlaku_knp'              => $k->masa_berlaku_knp, 
+                            'npwp_knp'                      => $k->npwp_knp, 
+                            'tempat_lahir_knp'              => $k->tempat_lahir_knp, 
+                            'tanggal_lahir_knp'             => $k->tanggal_lahir_knp, 
+                            'status_perkawinan_knp'         => $k->status_perkawinan_knp, 
+                            'jenis_kelamin_knp'             => $k->jenis_kelamin_knp, 
+                            'nomor_telepon_knp'             => $k->nomor_telepon_knp, 
+                            'alamat_knp'                    => $k->alamat_knp, 
+                            'alamat_sekarang_knp'           => $k->alamat_sekarang_knp,  
+                        'nama_dttot'=>$ss['nama'], 'alias_dttot'=>$ss['alias'], 'lahir_dttot'=>$ss['lahir'], 'negara_dttot'=>$ss['negara'], 
+                        'alamat_dttot'=>$ss['alamat'], 'keterangan_dttot'=>$ss['keterangan']];
+                        $x++;
+                    }
+                }
+            }
+              
+        }
+            return response()->json($res);
+    }
     
     public function withDttotPerorangan(Request $request){
         $id = $request->id;
@@ -343,8 +438,8 @@ class DttotController extends Controller
                 $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like2]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like3]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like4]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->get();
                 if(count($cek) > 0){
                     foreach ($cek as $d){
-                        $ss = json_decode($d->string,true);
-                        $ss = $this->getDataFromArray($ss); 
+                        $aa = json_decode($d->string,true);
+                        $ss = $this->getDataFromArray($aa); 
                         $res[$x] = ['nama'=>$k->nama,'nomor_akun'=>$k->nomor_akun, 'tanggal_registrasi'=>$k->tanggal_registrasi, 'tanggal_nasabah'=>$k->tanggal_nasabah, 
                         'jenis_identitas'=>$k->jenis_identitas, 'nomor_identitas'=>$k->nomor_identitas, 'masa_berlaku'=>$k->masa_berlaku, 'npwp'=>$k->npwp, 
                         'tempat_lahir'=>$k->tempat_lahir, 'tanggal_lahir'=>$k->tanggal_lahir, 'jenis_kelamin'=>$k->jenis_kelamin, 'profesi'=>$k->profesi, 'nomor_rekening_bank'=>$k->nomor_rekening_bank, 'nomor_telepon'=>$k->nomor_telepon, 
@@ -434,6 +529,122 @@ class DttotController extends Controller
 
     }
 
+    public function excelDttotNonPerorangan(Request $request){
+        $array = $request->data;
+        $fileName = $request->fileName.'.xls';      
+        $objPHPExcel = new PHPExcel(); 
+        $objPHPExcel->setActiveSheetIndex(0); 
+        $objPHPExcel->getActiveSheet()
+        ->setCellValue('A1', 'NOMOR AKUN')
+        ->setCellValue('B1', 'NAMA PERUSAHAAN')
+        ->setCellValue('C1', 'NOMOR IJIN USAHA')
+        ->setCellValue('D1', 'BIDANG USAHA')
+        ->setCellValue('E1', 'TEMPAT PENDIRIAN , TANGGAL PENDIRIAN') 
+        ->setCellValue('F1', 'BENTUK HUKUM') 
+        ->setCellValue('G1', 'NOMOR NPWP PERUSAHAAN ')
+        ->setCellValue('H1', 'PROFIL PERUSAHAAN')
+        ->setCellValue('I1', 'NOMOR REKENING PERUSAHAAN')
+        ->setCellValue('J1', 'NOMOR TELEPON PERUSAHAAN')
+        ->setCellValue('K1', 'EMAIL PERUSAHAAN')  
+        ->setCellValue('L1', 'WILAYAH DOMISILI PERUSAHAAN')
+        ->setCellValue('M1', 'ALAMAT PERUSAHAAN')
+        ->setCellValue('N1', 'NAMA BENEFECIAL OWNER')
+        ->setCellValue('O1', 'NAMA ALIAS BENEFECIAL OWNER')
+        ->setCellValue('P1', 'JENIS KARTU IDENTITAS BENEFECIAL OWNER')
+        ->setCellValue('Q1', 'NOMOR IDENTITAS BENEFECIAL OWNER') 
+        ->setCellValue('R1', 'MASA BERLAKU BENEFECIAL OWNER') 
+        ->setCellValue('S1', 'NOMOR NPWP BENEFECIAL OWNER')
+        ->setCellValue('T1', 'TEMPAT / TANGGAL LAHIR BENEFECIAL OWNER')
+        ->setCellValue('U1', 'STATUS PERKAWINAN BENEFECIAL OWNER')
+        ->setCellValue('V1', 'JENIS KELAMIN BENEFECIAL OWNER')
+        ->setCellValue('W1', 'NOMOR TELEPON BENEFECIAL OWNER') 
+        ->setCellValue('X1', 'ALAMAT IDENTITAS BENEFECIAL OWNER') 
+        ->setCellValue('Y1', 'ALAMAT BENEFECIAL OWNER')  
+        ->setCellValue('Z1', 'NAMA PENERIMA KUASA')
+        ->setCellValue('AA1', 'NAMA ALIAS PENERIMA KUASA')
+        ->setCellValue('AB1', 'JENIS KARTU IDENTITAS PENERIMA KUASA')
+        ->setCellValue('AC1', 'NOMOR IDENTITAS PENERIMA KUASA') 
+        ->setCellValue('AD1', 'MASA BERLAKU PENERIMA KUASA') 
+        ->setCellValue('AE1', 'NOMOR NPWP PENERIMA KUASA')
+        ->setCellValue('AF1', 'TEMPAT / TANGGAL LAHIR PENERIMA KUASA')
+        ->setCellValue('AG1', 'STATUS PERKAWINAN PENERIMA KUASA')
+        ->setCellValue('AH1', 'JENIS KELAMIN PENERIMA KUASA')
+        ->setCellValue('AI1', 'NOMOR TELEPON PENERIMA KUASA') 
+        ->setCellValue('AJ1', 'ALAMAT IDENTITAS PENERIMA KUASA') 
+        ->setCellValue('AK1', 'ALAMAT PENERIMA KUASA')   
+        ->setCellValue('AL1', 'NAMA DTTOT')
+        ->setCellValue('AM1', 'NAMA DTTOT ALIAS')
+        ->setCellValue('AN1', 'TEMPAT TANGGAL LAHIR DTTOT')
+        ->setCellValue('AO1', 'NEGARA DTTOT')
+        ->setCellValue('AP1', 'ALAMAT DTTOT')
+        ->setCellValue('AQ1', 'KETERANGAN DTTOT')
+                ;
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1:AQ1')->getFont()->setBold(true);  
+        $no=1;
+        $row=2; 
+
+        if(count($array) > 0){
+            //Put each record in a new cell
+            foreach ($array as $a){
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, $a['nomor_akun']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$row, $a['nama_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$row, $a['nomor_ijin_usaha']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$row, $a['bidang_usaha']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$row, $a['tempat_pendirian'].'/'.$a['tanggal_pendirian']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$row, $a['bentuk_hukum']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$row, $a['npwp_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('H'.$row, $a['profil_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('I'.$row, $a['no_rekening_bank_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('J'.$row, $a['nomor_telepon_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('K'.$row, $a['email_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('L'.$row, $a['wilayah_domisili_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('M'.$row, $a['alamat_perusahaan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('N'.$row, $a['nama_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('O'.$row, $a['nama_alias_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('P'.$row, $a['jenis_kartu_identitas_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('Q'.$row, $a['nomor_identitas_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('R'.$row, $a['masa_berlaku_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('S'.$row, $a['npwp_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('T'.$row, $a['tempat_lahir_bo'].'/'.$a['tanggal_lahir_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('U'.$row, $a['status_perkawinan_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('V'.$row, $a['jenis_kelamin_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('W'.$row, $a['nomor_telepon_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('X'.$row, $a['alamat_bo']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('Y'.$row, $a['alamat_sekarang_bo']); 
+                    $objPHPExcel->getActiveSheet()->setCellValue('Z'.$row, $a['nama_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AA'.$row, $a['nama_alias_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AB'.$row, $a['jenis_kartu_identitas_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AC'.$row, $a['nomor_identitas_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AD'.$row, $a['masa_berlaku_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AE'.$row, $a['npwp_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AF'.$row, $a['tempat_lahir_knp'].'/'.$a['tanggal_lahir_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AG'.$row, $a['status_perkawinan_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AH'.$row, $a['jenis_kelamin_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AI'.$row, $a['nomor_telepon_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AJ'.$row, $a['alamat_knp']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AK'.$row, $a['alamat_sekarang_knp']);  
+                    $objPHPExcel->getActiveSheet()->setCellValue('AL'.$row, $a['nama_dttot']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AM'.$row, $a['alias_dttot']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AN'.$row, $a['lahir_dttot']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AO'.$row, $a['negara_dttot']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AP'.$row, $a['alamat_dttot']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('AQ'.$row, $a['keterangan_dttot']);
+                    $no++; 
+                    $row++;  
+            }
+
+        }
+         
+        $objPHPExcel->getActiveSheet()->setTitle('Sheet1'); 
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output'); 
+
+    }
+
     public function cobaDttotNonPerorangan(Request $request){
         $id = $request->id;
         $filename = $request->filename;
@@ -453,7 +664,7 @@ class DttotController extends Controller
                 $like6 = "%{$d->nama_knp}%";
                 $like7 = "%{$d->nama_alias_knp}%";
                 $like8 = "%{$d->nomor_identitas_knp}%"; 
-                $cek =  DataExtract::where('string', 'LIKE', $like)->orWhere('string', 'LIKE', $like2)->orWhere('string', 'LIKE', $like3)->orWhere('string', 'LIKE', $like4)->orWhere('string', 'LIKE', $like5)->orWhere('string', 'LIKE', $like6)->orWhere('string', 'LIKE', $like7)->orWhere('string', 'LIKE', $like8)->get();
+                $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like2]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like3]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like4]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like6]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like7]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like8]])->get();
                 if(count($cek) > 0){
                     $decode = $cek;
                     $res[$x] = array(
@@ -530,7 +741,7 @@ class DttotController extends Controller
                 $like6 = "%{$d->nama_knp}%";
                 $like7 = "%{$d->nama_alias_knp}%";
                 $like8 = "%{$d->nomor_identitas_knp}%"; 
-                $cek =  DataExtract::where('string', 'LIKE', $like)->orWhere('string', 'LIKE', $like2)->orWhere('string', 'LIKE', $like3)->orWhere('string', 'LIKE', $like4)->orWhere('string', 'LIKE', $like5)->orWhere('string', 'LIKE', $like6)->orWhere('string', 'LIKE', $like7)->orWhere('string', 'LIKE', $like8)->get();
+                $cek =  DataExtract::where([['dokumen_dttot_id',$id],['string', 'LIKE', $like]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like2]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like3]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like4]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like5]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like6]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like7]])->orWhere([['dokumen_dttot_id',$id],['string', 'LIKE', $like8]])->get();
                 if(count($cek) > 0){
                     $decode = $cek;
                     $res[$x] = array(
@@ -1031,7 +1242,7 @@ class DttotController extends Controller
                     ->setCellValue('AQ1', 'KETERANGAN DTTOT')
                     ;
 
-        $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFont()->setBold(true);  
+        $objPHPExcel->getActiveSheet()->getStyle('A1:AQ1')->getFont()->setBold(true);  
         $no=1;
         $row=2;
         

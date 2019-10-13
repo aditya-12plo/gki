@@ -82,6 +82,8 @@ Route::get('/ukk-dttot-with-karyawan', 'DttotController@withDttotKaryawan');
 Route::post('/ukk-dttot-excel-karyawan', 'DttotController@excelDttotKaryawan');
 Route::get('/ukk-dttot-with-perorangan', 'DttotController@withDttotPerorangan');
 Route::post('/ukk-dttot-excel-perorangan', 'DttotController@excelDttotPerorangan');
+Route::get('/ukk-dttot-with-non-perorangan', 'DttotController@withDttotNonPerorangan');
+Route::post('/ukk-dttot-excel-non-perorangan', 'DttotController@excelDttotNonPerorangan');
 
 
 Route::get('/users-view', 'ViewController@index');

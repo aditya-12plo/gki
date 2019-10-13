@@ -26,6 +26,7 @@ import UkkPeps from './components/Ukk/IndexPep.vue';
 import UkkDttot from './components/Ukk/IndexDttot.vue';
 import UkkDttotKaryawan from './components/Ukk/UkkDttotKaryawan.vue';
 import UkkDttotPerorangan from './components/Ukk/UkkDttotPerorangan.vue';
+import UkkDttotNonPerorangan from './components/Ukk/UkkDttotNonPerorangan.vue';
 import Print from './components/Prints/Index.vue';
 
 let routes=[
@@ -139,6 +140,12 @@ let routes=[
 	path:'/ukk-dttot/perorangan/:id',
     name: 'UkkDttotPerorangan',
     component: UkkDttotPerorangan,
+	props: true
+}, 
+{
+	path:'/ukk-dttot/non-perorangan/:id',
+    name: 'UkkDttotNonPerorangan',
+    component: UkkDttotNonPerorangan,
 	props: true
 }, 
 

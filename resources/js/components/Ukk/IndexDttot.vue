@@ -647,7 +647,7 @@ export default {
                         'max' : this.endtime.time, 
                         'filename' : item.dokumen_name, 
                     }
-                    this.$router.push({name:'UkkDttotPerorangan', params: {id: this.diacak(item.id),rowDatanya:masuk }});
+                    this.$router.push({name:'UkkDttotNonPerorangan', params: {id: this.diacak(item.id),rowDatanya:masuk }});
                 }else{
                     this.error('document status must be complete');
                 } 

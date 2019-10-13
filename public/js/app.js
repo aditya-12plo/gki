@@ -10626,7 +10626,7 @@ var Modal = {
           'filename': item.dokumen_name
         };
         this.$router.push({
-          name: 'UkkDttotPerorangan',
+          name: 'UkkDttotNonPerorangan',
           params: {
             id: this.diacak(item.id),
             rowDatanya: masuk
@@ -12125,6 +12125,419 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_loading_overlay__WEBPACK_IMPO
       };
       axios({
         url: '/ukk-dttot-excel-karyawan',
+        method: 'POST',
+        data: masuk,
+        responseType: 'blob' // important
+
+      }).then(function (response) {
+        var url = window.URL.createObjectURL(new Blob([response.data]));
+        var link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', _this2.rowDatanya.filename + '.xls');
+        document.body.appendChild(link);
+        link.click();
+      });
+    }
+  },
+  events: {},
+  created: function created() {},
+  mounted: function mounted() {
+    this.fetchIt();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
+/* harmony import */ var vue_sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-sweetalert2 */ "./node_modules/vue-sweetalert2/dist/index.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
+/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
+/* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-good-table/dist/vue-good-table.css */ "./node_modules/vue-good-table/dist/vue-good-table.css");
+/* harmony import */ var vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_good_table_dist_vue_good_table_css__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var vue_good_table__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-good-table */ "./node_modules/vue-good-table/dist/vue-good-table.esm.js");
+/* harmony import */ var vue_html_to_paper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-html-to-paper */ "./node_modules/vue-html-to-paper/index.js");
+/* harmony import */ var vue_html_to_paper__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue_html_to_paper__WEBPACK_IMPORTED_MODULE_8__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+var options = {
+  name: '_blank',
+  specs: ['fullscreen=yes', 'titlebar=yes', 'scrollbars=yes'],
+  styles: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', 'https://unpkg.com/kidlat-css/css/kidlat.css']
+};
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_html_to_paper__WEBPACK_IMPORTED_MODULE_8___default.a, options);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_3__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4___default.a);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    rowDatanya: {
+      type: Object,
+      required: true
+    }
+  },
+  components: {
+    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_2__["default"],
+    VueGoodTable: vue_good_table__WEBPACK_IMPORTED_MODULE_7__["VueGoodTable"]
+  },
+  data: function data() {
+    return {
+      url: window.webURL,
+      errors: [],
+      token: localStorage.getItem('token'),
+      columns: [{
+        label: 'NOMOR AKUN',
+        field: 'nomor_akun',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA PERUSAHAAN',
+        field: 'nama_perusahaan',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NOMOR REKENING PERUSAHAAN',
+        field: 'no_rekening_bank_perusahaan',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NOMOR REKENING BANK',
+        field: 'nomor_rekening_bank',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA OWNER',
+        field: 'nama_bo',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA ALIAS OWNER',
+        field: 'nama_alias_bo',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NOMOR IDENTITAS OWNER',
+        field: 'nomor_identitas_bo',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA KUASA HUKUM',
+        field: 'nama_knp',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA ALIAS KUASA HUKUM',
+        field: 'nama_alias_knp',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NOMOR IDENTITAS KUASA HUKUM',
+        field: 'nomor_identitas_knp',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NAMA DTTOT',
+        field: 'nama_dttot',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'TEMPAT TANGGAL LAHIR DTTOT',
+        field: 'lahir_dttot',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'NEGARA DTTOT',
+        field: 'negara_dttot',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'ALAMAT DTTOT',
+        field: 'alamat_dttot',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }, {
+        label: 'KETERANGAN DTTOT',
+        field: 'keterangan_dttot',
+        filterOptions: {
+          enabled: true,
+          // enable filter for this column
+          placeholder: '',
+          // placeholder for filter input
+          filterValue: '',
+          // initial populated value for this filter
+          filterDropdownItems: [],
+          // dropdown (with selected values) instead of text input
+          filterFn: this.columnFilterFn,
+          //custom filter function that
+          trigger: 'enter' //only trigger on enter not on keyup 
+
+        }
+      }],
+      rows: []
+    };
+  },
+  watch: {},
+  methods: {
+    backLink: function backLink() {
+      this.$router.go(-1);
+    },
+    fetchIt: function fetchIt() {
+      var _this = this;
+
+      this.isLoading = true;
+      axios.get('/ukk-dttot-with-non-perorangan?id=' + this.rowDatanya.id + '&min=' + this.rowDatanya.min + '&max=' + this.rowDatanya.max + '&filename=' + this.rowDatanya.filename).then(function (response) {
+        if (!response.data) {
+          window.location.href = window.webURL;
+        } else {
+          _this.rows = response.data;
+        }
+      })["catch"](function (error) {
+        if (!_.isEmpty(error.response)) {
+          if (error.response.status == 500) {
+            _this.$router.push('/server-error');
+          } else {
+            _this.isLoading = false;
+          }
+        }
+      });
+    },
+    printItem: function printItem() {
+      this.$htmlToPaper('dataDttotNonPerorangan');
+    },
+    downloadItem: function downloadItem() {
+      var _this2 = this;
+
+      var masuk = {
+        'data': this.rows,
+        'filename': this.rowDatanya.filename
+      };
+      axios({
+        url: '/ukk-dttot-excel-non-perorangan',
         method: 'POST',
         data: masuk,
         responseType: 'blob' // important
@@ -94068,6 +94481,130 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row mb-4" }, [
+      _c("div", { staticClass: "col-md-12 mb-4" }, [
+        _c("div", { staticClass: "card text-left" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-warning",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.backLink()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fa fa-arrow-left" }), _vm._v(" Back")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.printItem()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fa fa-print" }), _vm._v(" Print")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.downloadItem()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "fa fa-file-excel-o" }),
+                _vm._v(" Download")
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "dataTables_wrapper container-fluid dt-bootstrap4",
+                  attrs: { id: "zero_configuration_table_wrapper" }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "row" },
+                    [
+                      _c("vue-good-table", {
+                        attrs: {
+                          id: "dataDttotNonPerorangan",
+                          columns: _vm.columns,
+                          rows: _vm.rows
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "breadcrumb" }, [
+      _c("div", { staticClass: "panel" }, [
+        _c(
+          "h1",
+          { staticClass: "animated fadeInLeft", attrs: { align: "center" } },
+          [_vm._v("Pencarian Data DTTOT Dengan Data Nasabah Non Perorangan")]
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Ukk/UkkDttotPerorangan.vue?vue&type=template&id=02fb2fa0&":
 /*!*************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Ukk/UkkDttotPerorangan.vue?vue&type=template&id=02fb2fa0& ***!
@@ -115684,6 +116221,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Ukk/UkkDttotNonPerorangan.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab& */ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab&");
+/* harmony import */ var _UkkDttotNonPerorangan_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UkkDttotNonPerorangan.vue?vue&type=script&lang=js& */ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UkkDttotNonPerorangan_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Ukk/UkkDttotNonPerorangan.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UkkDttotNonPerorangan_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./UkkDttotNonPerorangan.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UkkDttotNonPerorangan_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Ukk/UkkDttotNonPerorangan.vue?vue&type=template&id=7705ceab&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UkkDttotNonPerorangan_vue_vue_type_template_id_7705ceab___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Ukk/UkkDttotPerorangan.vue":
 /*!************************************************************!*\
   !*** ./resources/js/components/Ukk/UkkDttotPerorangan.vue ***!
@@ -116302,7 +116908,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Ukk_IndexDttot_vue__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/Ukk/IndexDttot.vue */ "./resources/js/components/Ukk/IndexDttot.vue");
 /* harmony import */ var _components_Ukk_UkkDttotKaryawan_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/Ukk/UkkDttotKaryawan.vue */ "./resources/js/components/Ukk/UkkDttotKaryawan.vue");
 /* harmony import */ var _components_Ukk_UkkDttotPerorangan_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/Ukk/UkkDttotPerorangan.vue */ "./resources/js/components/Ukk/UkkDttotPerorangan.vue");
-/* harmony import */ var _components_Prints_Index_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/Prints/Index.vue */ "./resources/js/components/Prints/Index.vue");
+/* harmony import */ var _components_Ukk_UkkDttotNonPerorangan_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/Ukk/UkkDttotNonPerorangan.vue */ "./resources/js/components/Ukk/UkkDttotNonPerorangan.vue");
+/* harmony import */ var _components_Prints_Index_vue__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./components/Prints/Index.vue */ "./resources/js/components/Prints/Index.vue");
+
 
 
 
@@ -116341,7 +116949,7 @@ var routes = [{
 {
   path: '/print',
   name: 'Print',
-  component: _components_Prints_Index_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
+  component: _components_Prints_Index_vue__WEBPACK_IMPORTED_MODULE_29__["default"],
   props: true
 },
 /** Users */
@@ -116424,6 +117032,11 @@ var routes = [{
   path: '/ukk-dttot/perorangan/:id',
   name: 'UkkDttotPerorangan',
   component: _components_Ukk_UkkDttotPerorangan_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
+  props: true
+}, {
+  path: '/ukk-dttot/non-perorangan/:id',
+  name: 'UkkDttotNonPerorangan',
+  component: _components_Ukk_UkkDttotNonPerorangan_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
   props: true
 },
 /** Perorangan */
