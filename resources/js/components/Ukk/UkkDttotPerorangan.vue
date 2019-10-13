@@ -3,7 +3,7 @@
 
 <div class="breadcrumb"> 
   <div class="panel">
-    <h1 class="animated fadeInLeft" align="center">Pencarian Data DTTOT Dengan Data Karyawan</h1>                
+    <h1 class="animated fadeInLeft" align="center">Pencarian Data DTTOT Dengan Data Nasabah Perorangan</h1>                
   </div>
 </div>
 
@@ -19,7 +19,7 @@
                         <div class="row">
 
     <vue-good-table
-        id="dataDttotKaryawan"
+        id="dataDttotPerorangan"
         :columns="columns"
         :rows="rows"
       />
@@ -80,67 +80,7 @@ export default {
             token: localStorage.getItem('token'),
             columns: [
             {
-                label: 'NAMA KARYAWAN',
-                field: 'nama_karyawan',
-                filterOptions: {
-                    enabled: true, // enable filter for this column
-                    placeholder: '', // placeholder for filter input
-                    filterValue: '', // initial populated value for this filter
-                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
-                    filterFn: this.columnFilterFn, //custom filter function that
-                    trigger: 'enter', //only trigger on enter not on keyup 
-                },
-            },
-            {
-                label: 'NOMOR APLIKASI',
-                field: 'nomor_aplikasi',
-                filterOptions: {
-                    enabled: true, // enable filter for this column
-                    placeholder: '', // placeholder for filter input
-                    filterValue: '', // initial populated value for this filter
-                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
-                    filterFn: this.columnFilterFn, //custom filter function that
-                    trigger: 'enter', //only trigger on enter not on keyup 
-                },
-            },
-            {
-                label: 'JABATAN',
-                field: 'jabatan',
-                filterOptions: {
-                    enabled: true, // enable filter for this column
-                    placeholder: '', // placeholder for filter input
-                    filterValue: '', // initial populated value for this filter
-                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
-                    filterFn: this.columnFilterFn, //custom filter function that
-                    trigger: 'enter', //only trigger on enter not on keyup 
-                },
-            },
-            {
-                label: 'DIVISI',
-                field: 'divisi',
-                filterOptions: {
-                    enabled: true, // enable filter for this column
-                    placeholder: '', // placeholder for filter input
-                    filterValue: '', // initial populated value for this filter
-                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
-                    filterFn: this.columnFilterFn, //custom filter function that
-                    trigger: 'enter', //only trigger on enter not on keyup 
-                },
-            },
-            {
-                label: 'AWAL MASUK',
-                field: 'awal_masuk',
-                filterOptions: {
-                    enabled: true, // enable filter for this column
-                    placeholder: '', // placeholder for filter input
-                    filterValue: '', // initial populated value for this filter
-                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
-                    filterFn: this.columnFilterFn, //custom filter function that
-                    trigger: 'enter', //only trigger on enter not on keyup 
-                },
-            },
-            {
-                label: 'NAMA DTTOT',
+                label: 'NAMA PERORANGAN',
                 field: 'nama',
                 filterOptions: {
                     enabled: true, // enable filter for this column
@@ -152,8 +92,68 @@ export default {
                 },
             },
             {
+                label: 'NOMOR IDENTITAS',
+                field: 'nomor_identitas',
+                filterOptions: {
+                    enabled: true, // enable filter for this column
+                    placeholder: '', // placeholder for filter input
+                    filterValue: '', // initial populated value for this filter
+                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
+                    filterFn: this.columnFilterFn, //custom filter function that
+                    trigger: 'enter', //only trigger on enter not on keyup 
+                },
+            },
+            {
+                label: 'NOMOR NPWP',
+                field: 'npwp',
+                filterOptions: {
+                    enabled: true, // enable filter for this column
+                    placeholder: '', // placeholder for filter input
+                    filterValue: '', // initial populated value for this filter
+                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
+                    filterFn: this.columnFilterFn, //custom filter function that
+                    trigger: 'enter', //only trigger on enter not on keyup 
+                },
+            },
+            {
+                label: 'NOMOR REKENING BANK',
+                field: 'nomor_rekening_bank',
+                filterOptions: {
+                    enabled: true, // enable filter for this column
+                    placeholder: '', // placeholder for filter input
+                    filterValue: '', // initial populated value for this filter
+                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
+                    filterFn: this.columnFilterFn, //custom filter function that
+                    trigger: 'enter', //only trigger on enter not on keyup 
+                },
+            },
+            {
+                label: 'NOMOR TELEPON',
+                field: 'nomor_telepon',
+                filterOptions: {
+                    enabled: true, // enable filter for this column
+                    placeholder: '', // placeholder for filter input
+                    filterValue: '', // initial populated value for this filter
+                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
+                    filterFn: this.columnFilterFn, //custom filter function that
+                    trigger: 'enter', //only trigger on enter not on keyup 
+                },
+            },
+            {
+                label: 'NAMA DTTOT',
+                field: 'nama_dttot',
+                filterOptions: {
+                    enabled: true, // enable filter for this column
+                    placeholder: '', // placeholder for filter input
+                    filterValue: '', // initial populated value for this filter
+                    filterDropdownItems: [], // dropdown (with selected values) instead of text input
+                    filterFn: this.columnFilterFn, //custom filter function that
+                    trigger: 'enter', //only trigger on enter not on keyup 
+                },
+            },
+            {
                 label: 'NAMA DTTOT ALIAS',
-                field: 'alias',
+                field: 'alias_dttot',
                 filterOptions: {
                     enabled: true, // enable filter for this column
                     placeholder: '', // placeholder for filter input
@@ -165,7 +165,7 @@ export default {
             },
             {
                 label: 'TEMPAT TANGGAL LAHIR DTTOT',
-                field: 'lahir',
+                field: 'lahir_dttot',
                 filterOptions: {
                     enabled: true, // enable filter for this column
                     placeholder: '', // placeholder for filter input
@@ -177,7 +177,7 @@ export default {
             },
             {
                 label: 'NEGARA DTTOT',
-                field: 'negara',
+                field: 'negara_dttot',
                 filterOptions: {
                     enabled: true, // enable filter for this column
                     placeholder: '', // placeholder for filter input
@@ -189,7 +189,7 @@ export default {
             },
             {
                 label: 'ALAMAT DTTOT',
-                field: 'alamat',
+                field: 'alamat_dttot',
                 filterOptions: {
                     enabled: true, // enable filter for this column
                     placeholder: '', // placeholder for filter input
@@ -201,7 +201,7 @@ export default {
             },
             {
                 label: 'KETERANGAN DTTOT',
-                field: 'keterangan',
+                field: 'keterangan_dttot',
                 filterOptions: {
                     enabled: true, // enable filter for this column
                     placeholder: '', // placeholder for filter input
@@ -224,7 +224,7 @@ export default {
         },
         fetchIt(){
             this.isLoading = true;
-               axios.get('/ukk-dttot-with-karyawan?id='+this.rowDatanya.id+'&min='+this.rowDatanya.min+'&max='+this.rowDatanya.max+'&filename='+this.rowDatanya.filename).then((response) => {
+               axios.get('/ukk-dttot-with-perorangan?id='+this.rowDatanya.id+'&min='+this.rowDatanya.min+'&max='+this.rowDatanya.max+'&filename='+this.rowDatanya.filename).then((response) => {
                    if(!response.data){ 
                         window.location.href = window.webURL; 
                     }else{ 
@@ -241,7 +241,7 @@ export default {
                 });
         },
         printItem() {
-            this.$htmlToPaper('dataDttotKaryawan');
+            this.$htmlToPaper('dataDttotPerorangan');
         } ,
         downloadItem() {
             var masuk = {
@@ -249,7 +249,7 @@ export default {
                 'filename' : this.rowDatanya.filename, 
             }
             axios({
-                url: '/ukk-dttot-excel-karyawan',
+                url: '/ukk-dttot-excel-perorangan',
                 method: 'POST',
                 data: masuk,
                 responseType: 'blob', // important

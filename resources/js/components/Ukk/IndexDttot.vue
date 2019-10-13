@@ -643,6 +643,21 @@ export default {
                     var masuk = 
                     {
                         'id' : item.id, 
+                        'min' : this.startTime.time, 
+                        'max' : this.endtime.time, 
+                        'filename' : item.dokumen_name, 
+                    }
+                    this.$router.push({name:'UkkDttotPerorangan', params: {id: this.diacak(item.id),rowDatanya:masuk }});
+                }else{
+                    this.error('document status must be complete');
+                } 
+            },
+            
+            downloadNonPeroranganItemLama(item ,index = this.indexOf(item)){
+                if(item.status == 'complete'){ 
+                    var masuk = 
+                    {
+                        'id' : item.id, 
                         'filename' : item.dokumen_name, 
                     }
                     axios({
@@ -664,6 +679,21 @@ export default {
             },
 
             downloadPeroranganItem(item ,index = this.indexOf(item)){
+                if(item.status == 'complete'){
+                    var masuk = 
+                    {
+                        'id' : item.id, 
+                        'min' : this.startTime.time, 
+                        'max' : this.endtime.time, 
+                        'filename' : item.dokumen_name, 
+                    }
+                    this.$router.push({name:'UkkDttotPerorangan', params: {id: this.diacak(item.id),rowDatanya:masuk }});
+                }else{
+                    this.error('document status must be complete');
+                } 
+            },
+
+            downloadPeroranganItemLama(item ,index = this.indexOf(item)){
                 if(item.status == 'complete'){ 
                     var masuk = 
                     {

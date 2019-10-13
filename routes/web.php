@@ -80,6 +80,9 @@ Route::post('/ukk-dttot-download-excel-karyawan', 'DttotController@downloadDttot
 Route::post('/ukk-dttot-download-file-pdf', 'DttotController@downloadFileDttot');
 Route::get('/ukk-dttot-with-karyawan', 'DttotController@withDttotKaryawan');
 Route::post('/ukk-dttot-excel-karyawan', 'DttotController@excelDttotKaryawan');
+Route::get('/ukk-dttot-with-perorangan', 'DttotController@withDttotPerorangan');
+Route::post('/ukk-dttot-excel-perorangan', 'DttotController@excelDttotPerorangan');
+
 
 Route::get('/users-view', 'ViewController@index');
 Route::get('/roles-view', 'ViewController@index');
